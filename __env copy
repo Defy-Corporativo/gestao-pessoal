@@ -1,8 +1,0 @@
-# Supabase Configuration
-SUPABASE_URL=https://uvjoslhhikvxkpjnxyvk.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2am9zbGhoaWt2eGtwam54eXZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNjQ4MTcsImV4cCI6MjA4Mzc0MDgxN30.-EFp1a_gEpoe8b-fhgbEHYw09fY9jE-X3iEicVmp_-w
-
-# Application URL
-# Local (Default): http://localhost:5174
-# Production: https://pessoal.defysolutions.com.br
-VITE_APP_URL=http://localhost:5174
