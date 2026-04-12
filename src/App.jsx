@@ -7,6 +7,8 @@ import Login from './components/auth/Login';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import ResponsiblesList from './components/responsibles/ResponsiblesList';
+import RolesList from './components/roles/RolesList';
+import ProfilesList from './components/profiles/ProfilesList';
 
 const App = () => {
     return (
@@ -24,6 +26,8 @@ const App = () => {
                             }
                         >
                             <Route index element={<ResponsiblesList />} />
+                            <Route path="papeis" element={<RolesList />} />
+                            <Route path="perfis" element={<ProfilesList />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Route>
                     </Routes>
