@@ -15,6 +15,7 @@ Este projeto faz parte de um portfólio corporativo com banco de dados unificado
 | `flop_` | fluxo-operacional   |
 | `prtc_` | portal-corporativo  |
 | `pepl_` | gestao-pessoal      |
+| `rebl_` | gestao-reembolso    |
 
 ## Referência Completa
 

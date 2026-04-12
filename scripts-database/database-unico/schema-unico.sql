@@ -287,3 +287,54 @@ CREATE TABLE public.prtc_profiles (
   CONSTRAINT prtc_profiles_pkey PRIMARY KEY (id),
   CONSTRAINT prtc_profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
 );
+CREATE TABLE public.rebl_cycles (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  reference_month text NOT NULL UNIQUE,
+  status text NOT NULL DEFAULT 'aberto'::text CHECK (status = ANY (ARRAY['aberto'::text, 'fechado'::text])),
+  opened_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  closed_at timestamp with time zone,
+  closed_by uuid,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT rebl_cycles_pkey PRIMARY KEY (id),
+  CONSTRAINT rebl_cycles_closed_by_fkey FOREIGN KEY (closed_by) REFERENCES public.pepl_responsibles(id)
+);
+CREATE TABLE public.rebl_requests (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  cycle_id uuid NOT NULL,
+  responsible_id uuid NOT NULL,
+  expense_date date NOT NULL,
+  amount numeric(12,2) NOT NULL,
+  description text NOT NULL,
+  receipt_paths text NOT NULL DEFAULT '[]',
+  status text NOT NULL DEFAULT 'pendente'::text CHECK (status = ANY (ARRAY['pendente'::text, 'aprovado'::text, 'reembolsado'::text, 'rejeitado'::text])),
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT rebl_requests_pkey PRIMARY KEY (id),
+  CONSTRAINT rebl_requests_cycle_id_fkey FOREIGN KEY (cycle_id) REFERENCES public.rebl_cycles(id),
+  CONSTRAINT rebl_requests_responsible_id_fkey FOREIGN KEY (responsible_id) REFERENCES public.pepl_responsibles(id)
+);
+CREATE TABLE public.rebl_payments (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  cycle_id uuid NOT NULL,
+  responsible_id uuid NOT NULL,
+  payment_date date NOT NULL,
+  total_amount numeric(12,2) NOT NULL,
+  transaction_code text NOT NULL,
+  created_by uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT rebl_payments_pkey PRIMARY KEY (id),
+  CONSTRAINT rebl_payments_cycle_id_fkey FOREIGN KEY (cycle_id) REFERENCES public.rebl_cycles(id),
+  CONSTRAINT rebl_payments_responsible_id_fkey FOREIGN KEY (responsible_id) REFERENCES public.pepl_responsibles(id),
+  CONSTRAINT rebl_payments_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.pepl_responsibles(id)
+);
+CREATE TABLE public.rebl_payment_items (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  payment_id uuid NOT NULL,
+  request_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT rebl_payment_items_pkey PRIMARY KEY (id),
+  CONSTRAINT rebl_payment_items_payment_id_fkey FOREIGN KEY (payment_id) REFERENCES public.rebl_payments(id),
+  CONSTRAINT rebl_payment_items_request_id_fkey FOREIGN KEY (request_id) REFERENCES public.rebl_requests(id),
+  CONSTRAINT rebl_payment_items_unique UNIQUE (payment_id, request_id)
+);

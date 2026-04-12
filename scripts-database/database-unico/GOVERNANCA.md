@@ -14,6 +14,7 @@ Este portfólio corporativo utiliza um **único banco de dados** (Supabase) comp
 | `flop_` | `fluxo-operacional`  | Projetos, objetivos, tarefas operacionais      |
 | `prtc_` | `portal-corporativo` | Portais internos/externos, perfis corporativos |
 | `pepl_` | `gestao-pessoal`     | Responsáveis, dados de pessoas                 |
+| `rebl_` | `gestao-reembolso`   | Reembolsos, ciclos, pagamentos, comprovantes   |
 
 ---
 
@@ -32,6 +33,7 @@ Exemplos:
 - Somente `forecast-comercial` pode manipular `fcst_opportunities`, `fcst_clients`, etc.
 - Somente `fluxo-operacional` pode manipular `flop_projetos`, `flop_tarefas`, etc.
 - Somente `portal-corporativo` pode manipular `prtc_portals`, `prtc_profiles`, etc.
+- Somente `gestao-reembolso` pode manipular `rebl_cycles`, `rebl_requests`, `rebl_payments`, etc.
 
 ### 3. Criação de Tabelas
 Toda nova tabela criada deve seguir o padrão de prefixo da aplicação responsável.
@@ -60,7 +62,8 @@ defy-corporativo/
 ├── forecast-comercial-2/    ← Aplicação de forecast comercial (fcst_)
 ├── fluxo-operacional/       ← Aplicação de fluxo operacional (flop_)
 ├── portal-corporativo/      ← Portal corporativo (prtc_)
-└── gestao-pessoal/          ← Gestão de pessoal (pepl_)
+├── gestao-pessoal/          ← Gestão de pessoal (pepl_)
+└── gestao-reembolso/        ← Gestão de reembolso (rebl_)
 ```
 
 ---
