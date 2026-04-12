@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { UserCircle, ChevronDown, ChevronUp, Plus, Trash2, Check, X, Edit2, Save } from 'lucide-react';
-import { responsiblesService } from '../../services/responsiblesService';
+import { UserCircle, ChevronDown, ChevronUp, Plus, Trash2, Check, X, Edit2, Save, Search } from 'lucide-react';
+
 import { rolesService } from '../../services/rolesService';
 import { profilesService } from '../../services/profilesService';
 import styles from './Profiles.module.css';
@@ -247,20 +247,21 @@ const ProfilePanel = ({ responsible, allRoles, onClose }) => {
 
 // ─── Componente principal ────────────────────────────────────────────────────
 const ProfilesList = () => {
-    const [responsibles, setResponsibles] = useState([]);
+    const [profiles, setProfiles] = useState([]);
     const [allRoles, setAllRoles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
+    const [search, setSearch] = useState('');
 
     useEffect(() => { loadData(); }, []);
 
     const loadData = async () => {
         try {
-            const [resp, roles] = await Promise.all([
-                responsiblesService.getResponsibles(false), // só ativos
+            const [profs, roles] = await Promise.all([
+                profilesService.getAllProfilesSummary(),
                 rolesService.getRoles(),
             ]);
-            setResponsibles(resp);
+            setProfiles(profs);
             setAllRoles(roles);
         } catch (err) {
             console.error('Erro ao carregar dados:', err);
@@ -270,6 +271,18 @@ const ProfilesList = () => {
     };
 
     const toggle = (id) => setExpandedId(prev => prev === id ? null : id);
+
+    // Filtro global: nome, email, papéis, habilidades, job description
+    const filtered = profiles.filter(r => {
+        if (!search.trim()) return true;
+        const q = search.toLowerCase();
+        if (r.name?.toLowerCase().includes(q)) return true;
+        if (r.email?.toLowerCase().includes(q)) return true;
+        if (r.job_description?.toLowerCase().includes(q)) return true;
+        if (r.roles?.some(role => role.name?.toLowerCase().includes(q))) return true;
+        if (r.skillTexts?.some(s => s.toLowerCase().includes(q))) return true;
+        return false;
+    });
 
     if (loading) return (
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 80 }}>
@@ -282,19 +295,42 @@ const ProfilesList = () => {
             <div className="page-header">
                 <h1 className="page-title">Perfis dos Responsáveis</h1>
                 <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                    {responsibles.length} responsável{responsibles.length !== 1 ? 'is' : ''} ativo{responsibles.length !== 1 ? 's' : ''}
+                    {filtered.length} de {profiles.length} responsável{profiles.length !== 1 ? 'is' : ''}
                 </span>
             </div>
 
-            {responsibles.length === 0 ? (
+            {/* Barra de busca global */}
+            <div className={styles.searchBar}>
+                <Search size={18} className={styles.searchIcon} />
+                <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Buscar por nome, papel, habilidade ou job description..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                />
+                {search && (
+                    <button className={styles.searchClear} onClick={() => setSearch('')} title="Limpar busca">
+                        <X size={16} />
+                    </button>
+                )}
+            </div>
+
+            {profiles.length === 0 ? (
                 <div className="card" style={{ textAlign: 'center', padding: 48, color: 'var(--text-secondary)' }}>
                     <UserCircle size={48} color="var(--border-color)" style={{ marginBottom: 12 }} />
                     <p>Nenhum responsável ativo encontrado.</p>
                     <span style={{ fontSize: 14 }}>Cadastre responsáveis no menu "Responsáveis".</span>
                 </div>
+            ) : filtered.length === 0 ? (
+                <div className="card" style={{ textAlign: 'center', padding: 48, color: 'var(--text-secondary)' }}>
+                    <Search size={40} color="var(--border-color)" style={{ marginBottom: 12 }} />
+                    <p style={{ margin: 0, fontWeight: 500 }}>Nenhum resultado para "{search}"</p>
+                    <span style={{ fontSize: 14, marginTop: 4, display: 'block' }}>Tente buscar por nome, papel, habilidade ou trecho da descrição.</span>
+                </div>
             ) : (
                 <div className={styles.accordionList}>
-                    {responsibles.map(r => (
+                    {filtered.map(r => (
                         <div key={r.id} className={styles.accordionItem}>
                             <button className={styles.accordionHeader} onClick={() => toggle(r.id)}>
                                 <div className={styles.accordionInfo}>
@@ -304,6 +340,13 @@ const ProfilesList = () => {
                                     <div>
                                         <span className={styles.accordionName}>{r.name}</span>
                                         {r.email && <span className={styles.accordionEmail}>{r.email}</span>}
+                                        {r.roles.length > 0 && (
+                                            <div className={styles.accordionRoles}>
+                                                {r.roles.map(role => (
+                                                    <span key={role.id} className={styles.accordionRoleBadge}>{role.name}</span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
