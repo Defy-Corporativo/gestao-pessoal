@@ -1,366 +1,88 @@
-.accordionList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+.accordionList { display: flex; flex-direction: column; gap: 8px; }
+.accordionItem { background: var(--bg-secondary); border-radius: var(--border-radius-md); border: 1px solid var(--border-color-light); overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow var(--transition-base); }
+.accordionItem:has(.accordionHeader:hover) { border-color: var(--border-color); }
+.accordionHeader { width: 100%; background: none; border: none; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background var(--transition-base); color: var(--text-primary); }
+.accordionHeader:hover { background: var(--bg-main); }
+.accordionInfo { display: flex; align-items: center; gap: 14px; }
+.accordionAvatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary) 0%, #6366f1 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+.accordionName { display: block; font-size: 15px; font-weight: 600; color: var(--text-primary); text-align: left; }
+.accordionEmail { display: block; font-size: 13px; color: var(--text-tertiary); margin-top: 2px; text-align: left; }
+.expandHint { font-size: 13px; color: var(--color-primary); font-weight: 500; }
+.panel { border-top: 1px solid var(--border-color-light); padding: 0 20px 20px; display: flex; flex-direction: column; gap: 0; }
+.panelLoading { padding: 24px 20px; color: var(--text-secondary); font-size: 14px; }
+.section { padding: 20px 0; border-bottom: 1px solid var(--border-color-light); }
+.section:last-child { border-bottom: none; padding-bottom: 0; }
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sectionTitle { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); margin: 0 0 12px; }
+.sectionHeader .sectionTitle { margin: 0; }
+.editBtn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 13px; padding: 5px 12px; border-radius: var(--border-radius-sm); cursor: pointer; transition: all var(--transition-base); }
+.editBtn:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+.hint { font-size: 13px; color: var(--text-tertiary); font-style: italic; margin: 0; }
+.jobDescText { font-size: 14px; line-height: 1.7; color: var(--text-secondary); white-space: pre-wrap; margin: 0; background: var(--bg-main); padding: 14px; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color-light); }
+.rolesGrid { display: flex; flex-wrap: wrap; gap: 8px; }
+.roleChip { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all var(--transition-base); user-select: none; }
+.roleChip:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+.roleChipSelected { background: var(--color-primary); border-color: var(--color-primary); color: white; }
+.roleChipSelected:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: white; }
+.skillsList { display: flex; flex-direction: column; gap: 8px; }
+.skillItem { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg-main); border-radius: var(--border-radius-sm); border: 1px solid var(--border-color-light); }
+.skillIndex { width: 22px; height: 22px; background: var(--color-primary-light); color: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.skillText { flex: 1; font-size: 14px; color: var(--text-primary); line-height: 1.5; }
+.skillActions { display: flex; gap: 4px; flex-shrink: 0; }
+.iconBtn { width: 30px; height: 30px; background: none; border: 1px solid var(--border-color-light); border-radius: var(--border-radius-sm); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: all var(--transition-base); }
+.iconBtn:hover { background: var(--color-primary-light); border-color: var(--color-primary-light); color: var(--color-primary); }
+.iconBtnDanger:hover { background: var(--color-danger-light); border-color: var(--color-danger-light); color: var(--color-danger); }
+.searchBar { display: flex; align-items: center; gap: 10px; background: var(--bg-secondary); border: 1px solid var(--border-color-light); border-radius: var(--border-radius-md); padding: 4px 16px; margin-bottom: 20px; box-shadow: var(--shadow-sm); transition: border-color var(--transition-base), box-shadow var(--transition-base); }
+.searchBar:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+.searchIcon { color: var(--text-tertiary); flex-shrink: 0; }
+.searchInput { flex: 1; border: none; background: none; padding: 12px 0; font-size: 14px; color: var(--text-primary); outline: none; font-family: var(--font-family); }
+.searchInput::placeholder { color: var(--text-tertiary); }
+.searchClear { background: none; border: none; padding: 4px; cursor: pointer; color: var(--text-tertiary); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all var(--transition-base); }
+.searchClear:hover { background: var(--bg-hover); color: var(--text-primary); }
+.accordionRoles { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.accordionRoleBadge { display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: 600; border-radius: 10px; background: var(--color-primary-light); color: var(--color-primary); line-height: 1.4; }
 
-.accordionItem {
-    background: var(--bg-secondary);
-    border-radius: var(--border-radius-md);
-    border: 1px solid var(--border-color-light);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition-base);
-}
+/* ── KPI items ── */
+.kpiItem { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--bg-main); border-radius: var(--border-radius-sm); border: 1px solid var(--border-color-light); }
+.kpiBody { flex: 1; min-width: 0; }
+.kpiDesc { font-size: 14px; font-weight: 500; color: var(--text-primary); display: block; margin-bottom: 4px; }
+.kpiMeasure { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.kpiMeasure strong { color: var(--text-primary); font-weight: 500; }
+.kpiFormRow { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.kpiFormRow input, .kpiFormRow textarea { flex: 1; min-width: 200px; }
 
-.accordionItem:has(.accordionHeader:hover) {
-    border-color: var(--border-color);
-}
+/* ── Functions modal (Pilares de Atuação) ── */
+.modalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal { background: var(--bg-secondary); border-radius: var(--border-radius); width: 100%; max-width: 680px; padding: 28px; box-shadow: var(--shadow-lg); max-height: 85vh; overflow-y: auto; }
+.modalTitle { font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0 0 8px 0; }
+.modalSubtitle { font-size: 13px; color: var(--text-secondary); margin: 0 0 20px 0; }
+.modalActions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color-light); }
+.pilarGroup { margin-bottom: 18px; }
+.pilarLabel { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-primary); margin-bottom: 8px; display: block; padding-bottom: 6px; border-bottom: 2px solid var(--color-primary-light); }
+.funcCheckList { display: flex; flex-direction: column; gap: 6px; }
+.funcCheckItem { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color-light); cursor: pointer; transition: all var(--transition-base); user-select: none; }
+.funcCheckItem:hover { border-color: var(--color-primary-light); background: var(--bg-main); }
+.funcCheckItem.selected { border-color: var(--color-primary); background: var(--color-primary-light); }
+.funcCheckbox { margin-top: 2px; flex-shrink: 0; accent-color: var(--color-primary); width: 16px; height: 16px; }
+.funcInfo { flex: 1; min-width: 0; }
+.funcName { font-size: 14px; font-weight: 600; color: var(--text-primary); display: block; }
+.funcResp { font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-top: 2px; }
 
-.accordionHeader {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: background var(--transition-base);
-    color: var(--text-primary);
-}
+/* ── Pilares tags on profile ── */
+.funcTagsList { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.funcTag { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; background: var(--color-primary-light); color: var(--color-primary); }
+.funcTagPilar { font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.7; margin-right: 2px; }
 
-.accordionHeader:hover {
-    background: var(--bg-main);
-}
-
-.accordionInfo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.accordionAvatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-primary) 0%, #6366f1 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    flex-shrink: 0;
-}
-
-.accordionName {
-    display: block;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-primary);
-    text-align: left;
-}
-
-.accordionEmail {
-    display: block;
-    font-size: 13px;
-    color: var(--text-tertiary);
-    margin-top: 2px;
-    text-align: left;
-}
-
-.expandHint {
-    font-size: 13px;
-    color: var(--color-primary);
-    font-weight: 500;
-}
-
-/* Painel interno */
-.panel {
-    border-top: 1px solid var(--border-color-light);
-    padding: 0 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.panelLoading {
-    padding: 24px 20px;
-    color: var(--text-secondary);
-    font-size: 14px;
-}
-
-.section {
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border-color-light);
-}
-
-.section:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.sectionHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.sectionTitle {
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-tertiary);
-    margin: 0 0 12px;
-}
-
-.sectionHeader .sectionTitle {
-    margin: 0;
-}
-
-.editBtn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: none;
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    font-size: 13px;
-    padding: 5px 12px;
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: all var(--transition-base);
-}
-
-.editBtn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: var(--color-primary-light);
-}
-
-.hint {
-    font-size: 13px;
-    color: var(--text-tertiary);
-    font-style: italic;
-    margin: 0;
-}
-
-.jobDescText {
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--text-secondary);
-    white-space: pre-wrap;
-    margin: 0;
-    background: var(--bg-main);
-    padding: 14px;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--border-color-light);
-}
-
-/* Chips de papéis */
-.rolesGrid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.roleChip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 7px 14px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border-color);
-    background: var(--bg-secondary);
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-base);
-    user-select: none;
-}
-
-.roleChip:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: var(--color-primary-light);
-}
-
-.roleChipSelected {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
-}
-
-.roleChipSelected:hover {
-    background: var(--color-primary-hover);
-    border-color: var(--color-primary-hover);
-    color: white;
-}
-
-/* Lista de habilidades */
-.skillsList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.skillItem {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    background: var(--bg-main);
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--border-color-light);
-}
-
-.skillIndex {
-    width: 22px;
-    height: 22px;
-    background: var(--color-primary-light);
-    color: var(--color-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.skillText {
-    flex: 1;
-    font-size: 14px;
-    color: var(--text-primary);
-    line-height: 1.5;
-}
-
-.skillActions {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-}
-
-.iconBtn {
-    width: 30px;
-    height: 30px;
-    background: none;
-    border: 1px solid var(--border-color-light);
-    border-radius: var(--border-radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: all var(--transition-base);
-}
-
-.iconBtn:hover {
-    background: var(--color-primary-light);
-    border-color: var(--color-primary-light);
-    color: var(--color-primary);
-}
-
-.iconBtnDanger:hover {
-    background: var(--color-danger-light);
-    border-color: var(--color-danger-light);
-    color: var(--color-danger);
-}
+/* ── Profile link ── */
+.profileLinkBar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-main); border: 1px solid var(--border-color-light); border-radius: var(--border-radius-sm); margin-bottom: 16px; }
+.profileLinkInput { flex: 1; border: none; background: none; font-size: 13px; color: var(--text-secondary); outline: none; font-family: var(--font-family); }
+.copyBtn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 5px 10px; border-radius: var(--border-radius-sm); cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; transition: all var(--transition-base); }
+.copyBtn:hover { background: var(--color-primary-light); color: var(--color-primary); border-color: var(--color-primary-light); }
 
 @media (max-width: 768px) {
-    .panel {
-        padding: 0 14px 16px;
-    }
-
-    .accordionHeader {
-        padding: 14px 16px;
-    }
-
-    .expandHint {
-        display: none;
-    }
-
-    .searchBar {
-        margin-bottom: 12px;
-    }
-}
-
-/* Barra de busca global */
-.searchBar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color-light);
-    border-radius: var(--border-radius-md);
-    padding: 4px 16px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
-    transition: border-color var(--transition-base), box-shadow var(--transition-base);
-}
-
-.searchBar:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-.searchIcon {
-    color: var(--text-tertiary);
-    flex-shrink: 0;
-}
-
-.searchInput {
-    flex: 1;
-    border: none;
-    background: none;
-    padding: 12px 0;
-    font-size: 14px;
-    color: var(--text-primary);
-    outline: none;
-    font-family: var(--font-family);
-}
-
-.searchInput::placeholder {
-    color: var(--text-tertiary);
-}
-
-.searchClear {
-    background: none;
-    border: none;
-    padding: 4px;
-    cursor: pointer;
-    color: var(--text-tertiary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-base);
-}
-
-.searchClear:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-}
-
-/* Badges de papéis no accordion header */
-.accordionRoles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 5px;
-}
-
-.accordionRoleBadge {
-    display: inline-block;
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    border-radius: 10px;
-    background: var(--color-primary-light);
-    color: var(--color-primary);
-    line-height: 1.4;
+    .panel { padding: 0 14px 16px; }
+    .accordionHeader { padding: 14px 16px; }
+    .expandHint { display: none; }
+    .searchBar { margin-bottom: 12px; }
+    .kpiFormRow { flex-direction: column; }
 }

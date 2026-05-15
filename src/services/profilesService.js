@@ -41,7 +41,7 @@ export const profilesService = {
         }));
     },
 
-    // Buscar perfil completo de um responsável (roles + skills + job_description)
+    // Buscar perfil completo de um responsável (roles + skills + kpis + functions + mission)
     async getProfile(responsibleId) {
         const { data: responsible, error: rError } = await supabase
             .from('pepl_responsibles')
@@ -63,14 +63,47 @@ export const profilesService = {
             .order('order_index', { ascending: true });
         if (skillsError) throw skillsError;
 
+        const { data: kpis, error: kpisError } = await supabase
+            .from('pepl_responsible_kpis')
+            .select('*')
+            .eq('responsible_id', responsibleId)
+            .order('order_index', { ascending: true });
+        if (kpisError) throw kpisError;
+
+        const { data: funcLinks, error: funcError } = await supabase
+            .from('pepl_responsible_functions')
+            .select('function_id, pepl_functions(id, name, pilar)')
+            .eq('responsible_id', responsibleId);
+        if (funcError) throw funcError;
+
         return {
             ...responsible,
             roles: roles?.map(r => r.pepl_roles) || [],
             skills: skills || [],
+            kpis: kpis || [],
+            functions: funcLinks?.map(l => l.pepl_functions).filter(Boolean) || [],
         };
     },
 
-    // Salvar job_description
+    // ══════════════════════════════════════════════
+    // MISSÃO
+    // ══════════════════════════════════════════════
+
+    async saveMission(responsibleId, mission) {
+        const { data, error } = await supabase
+            .from('pepl_responsibles')
+            .update({ mission, updated_at: new Date().toISOString() })
+            .eq('id', responsibleId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    // ══════════════════════════════════════════════
+    // JOB DESCRIPTION
+    // ══════════════════════════════════════════════
+
     async saveJobDescription(responsibleId, jobDescription) {
         const { data, error } = await supabase
             .from('pepl_responsibles')
@@ -82,9 +115,11 @@ export const profilesService = {
         return data;
     },
 
-    // Definir papéis de um responsável (substitui todos)
+    // ══════════════════════════════════════════════
+    // PAPÉIS
+    // ══════════════════════════════════════════════
+
     async setRoles(responsibleId, roleIds) {
-        // Remover todos os papéis atuais
         const { error: deleteError } = await supabase
             .from('pepl_responsible_roles')
             .delete()
@@ -93,7 +128,6 @@ export const profilesService = {
 
         if (roleIds.length === 0) return;
 
-        // Inserir novos vínculos
         const inserts = roleIds.map(role_id => ({ responsible_id: responsibleId, role_id }));
         const { error: insertError } = await supabase
             .from('pepl_responsible_roles')
@@ -101,7 +135,10 @@ export const profilesService = {
         if (insertError) throw insertError;
     },
 
-    // Adicionar habilidade
+    // ══════════════════════════════════════════════
+    // HABILIDADES
+    // ══════════════════════════════════════════════
+
     async addSkill(responsibleId, skill, orderIndex) {
         const { data, error } = await supabase
             .from('pepl_responsible_skills')
@@ -112,7 +149,6 @@ export const profilesService = {
         return data;
     },
 
-    // Atualizar habilidade
     async updateSkill(id, skill) {
         const { data, error } = await supabase
             .from('pepl_responsible_skills')
@@ -124,12 +160,80 @@ export const profilesService = {
         return data;
     },
 
-    // Excluir habilidade
     async deleteSkill(id) {
         const { error } = await supabase
             .from('pepl_responsible_skills')
             .delete()
             .eq('id', id);
         if (error) throw error;
+    },
+
+    // ══════════════════════════════════════════════
+    // KPIs (Indicadores de Desempenho)
+    // ══════════════════════════════════════════════
+
+    async addKpi(responsibleId, description, measurement, orderIndex) {
+        const { data, error } = await supabase
+            .from('pepl_responsible_kpis')
+            .insert([{
+                responsible_id: responsibleId,
+                description: description.trim(),
+                measurement: measurement.trim(),
+                order_index: orderIndex,
+            }])
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async updateKpi(id, description, measurement) {
+        const { data, error } = await supabase
+            .from('pepl_responsible_kpis')
+            .update({ description: description.trim(), measurement: measurement.trim() })
+            .eq('id', id)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async deleteKpi(id) {
+        const { error } = await supabase
+            .from('pepl_responsible_kpis')
+            .delete()
+            .eq('id', id);
+        if (error) throw error;
+    },
+
+    // ══════════════════════════════════════════════
+    // PILARES DE ATUAÇÃO (Funções Organizacionais)
+    // ══════════════════════════════════════════════
+
+    async setFunctions(responsibleId, functionIds) {
+        const { error: deleteError } = await supabase
+            .from('pepl_responsible_functions')
+            .delete()
+            .eq('responsible_id', responsibleId);
+        if (deleteError) throw deleteError;
+
+        if (functionIds.length === 0) return;
+
+        const inserts = functionIds.map(function_id => ({ responsible_id: responsibleId, function_id }));
+        const { error: insertError } = await supabase
+            .from('pepl_responsible_functions')
+            .insert(inserts);
+        if (insertError) throw insertError;
+    },
+
+    // Buscar responsável pelo email
+    async getResponsibleByEmail(email) {
+        const { data, error } = await supabase
+            .from('pepl_responsibles')
+            .select('*')
+            .eq('email', email.toLowerCase())
+            .maybeSingle();
+        if (error) throw error;
+        return data;
     },
 };

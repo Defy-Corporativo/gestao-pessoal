@@ -230,6 +230,7 @@ CREATE TABLE public.pepl_responsibles (
   name text NOT NULL UNIQUE,
   email text,
   job_description text,
+  mission text,
   is_active boolean DEFAULT true,
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
@@ -241,6 +242,16 @@ CREATE TABLE public.pepl_roles (
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   CONSTRAINT pepl_roles_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.pepl_functions (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name text NOT NULL UNIQUE,
+  pilar text NOT NULL,
+  responsabilidades text,
+  resultado_esperado text,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT pepl_functions_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.pepl_responsible_roles (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -260,6 +271,26 @@ CREATE TABLE public.pepl_responsible_skills (
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   CONSTRAINT pepl_responsible_skills_pkey PRIMARY KEY (id),
   CONSTRAINT pepl_responsible_skills_responsible_id_fkey FOREIGN KEY (responsible_id) REFERENCES public.pepl_responsibles(id) ON DELETE CASCADE
+);
+CREATE TABLE public.pepl_responsible_kpis (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  responsible_id uuid NOT NULL,
+  description text NOT NULL,
+  measurement text NOT NULL,
+  order_index integer DEFAULT 0,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT pepl_responsible_kpis_pkey PRIMARY KEY (id),
+  CONSTRAINT pepl_responsible_kpis_responsible_id_fkey FOREIGN KEY (responsible_id) REFERENCES public.pepl_responsibles(id) ON DELETE CASCADE
+);
+CREATE TABLE public.pepl_responsible_functions (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  responsible_id uuid NOT NULL,
+  function_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  CONSTRAINT pepl_responsible_functions_pkey PRIMARY KEY (id),
+  CONSTRAINT pepl_responsible_functions_responsible_id_fkey FOREIGN KEY (responsible_id) REFERENCES public.pepl_responsibles(id) ON DELETE CASCADE,
+  CONSTRAINT pepl_responsible_functions_function_id_fkey FOREIGN KEY (function_id) REFERENCES public.pepl_functions(id) ON DELETE CASCADE,
+  CONSTRAINT pepl_responsible_functions_unique UNIQUE (responsible_id, function_id)
 );
 CREATE TABLE public.prtc_portals (
   id uuid NOT NULL DEFAULT gen_random_uuid(),

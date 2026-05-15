@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Users, Menu, ChevronLeft, UserCog, Briefcase, UserCircle } from 'lucide-react';
+import { Users, Menu, ChevronLeft, UserCog, Briefcase, UserCircle, LayoutGrid } from 'lucide-react';
 import styles from './Layout.module.css';
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
@@ -58,6 +58,15 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                     >
                         <Users size={20} />
                         {!isCollapsed && <span>Responsáveis</span>}
+                    </NavLink>
+                    <NavLink
+                        to="/funcoes"
+                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
+                        title="Funções"
+                        onClick={() => { window.innerWidth < 768 && onToggle(); }}
+                    >
+                        <LayoutGrid size={20} />
+                        {!isCollapsed && <span>Funções</span>}
                     </NavLink>
                     <NavLink
                         to="/papeis"
