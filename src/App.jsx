@@ -18,7 +18,20 @@ const App = () => {
             <AuthProvider>
                 <Router>
                     <Routes>
+                        {/* Página de login */}
                         <Route path="/login" element={<Login />} />
+
+                        {/* Link de perfil individual — standalone, sem sidebar/menu */}
+                        <Route
+                            path="/meu-perfil/:id"
+                            element={
+                                <ProtectedRoute>
+                                    <MyProfile />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        {/* Portal interno — com MainLayout (sidebar + header) */}
                         <Route
                             path="/*"
                             element={
@@ -31,7 +44,6 @@ const App = () => {
                             <Route path="funcoes" element={<FunctionsList />} />
                             <Route path="papeis" element={<RolesList />} />
                             <Route path="perfis" element={<ProfilesList />} />
-                            <Route path="meu-perfil/:id" element={<MyProfile />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Route>
                     </Routes>
