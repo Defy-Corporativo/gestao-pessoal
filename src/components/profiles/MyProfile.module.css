@@ -72,6 +72,28 @@
     opacity: 1;
 }
 
+.logoutBtn {
+    background: none;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+    font-weight: 500;
+    font-family: inherit;
+}
+
+.logoutBtn:hover {
+    border-color: #fca5a5;
+    color: #ef4444;
+    background: #fef2f2;
+}
+
 /* ── Hero card do usuário ── */
 .hero {
     background: linear-gradient(135deg, var(--color-primary, #3b82f6) 0%, #6366f1 100%);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     UserCog, Edit2, Save, X, Check, Plus, Trash2, LayoutGrid,
-    Target, Briefcase, BookOpen, Award, Zap,
+    Target, Briefcase, BookOpen, Award, Zap, LogOut,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { profilesService } from '../../services/profilesService';
@@ -111,7 +111,7 @@ const FunctionsSheet = ({ selectedIds, onSave, onClose }) => {
 // ─── Componente principal ─────────────────────────────────────────────────────
 const MyProfile = () => {
     const { id } = useParams();
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
     const navigate = useNavigate();
 
     const [responsible, setResponsible] = useState(null);
@@ -320,9 +320,14 @@ const MyProfile = () => {
                         <span className={s.topBarSub}>Gestão Pessoal · Defy</span>
                     </div>
                 </div>
-                <span className={`${s.topBarSaved} ${rolesSaved ? s.visible : ''}`}>
-                    <Check size={14} /> Salvo!
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span className={`${s.topBarSaved} ${rolesSaved ? s.visible : ''}`}>
+                        <Check size={14} /> Salvo!
+                    </span>
+                    <button className={s.logoutBtn} onClick={signOut} title="Sair">
+                        <LogOut size={15} /> Sair
+                    </button>
+                </div>
             </div>
 
             {/* ── HERO ── */}

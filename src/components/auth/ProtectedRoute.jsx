@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 const ALLOWED_DOMAIN = 'defysolutions.com.br';
 
 const DomainGuard = ({ children }) => {
     const { user, loading } = useAuth();
+    const location = useLocation();
     const [status, setStatus] = useState('checking'); // checking | allowed | blocked
 
     useEffect(() => {
@@ -33,6 +34,7 @@ const DomainGuard = ({ children }) => {
     }
 
     if (status === 'unauthenticated') {
+        sessionStorage.setItem('post_login_redirect', location.pathname);
         return <Navigate to="/login" replace />;
     }
 
