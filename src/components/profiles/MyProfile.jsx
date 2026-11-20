@@ -317,7 +317,7 @@ const MyProfile = () => {
                     <div className={s.topBarLogo}>G</div>
                     <div>
                         <span className={s.topBarName}>Meu Perfil</span>
-                        <span className={s.topBarSub}>Gestão Pessoal · Defy</span>
+                        <span className={s.topBarSub}>Gestão Pessoal · Defy Solutions</span>
                     </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
